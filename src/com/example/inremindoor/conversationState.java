@@ -36,7 +36,8 @@ public void setQuestions(){
 	   }
 	   conversations.put("Start", "Good "+timeOfDay+" "+residentName+", I will quickly prepare your reminders. Please wait a moment. ");
 	   conversations.put("Loaded", " Okay, all information loaded. ");
-	   conversations.put("Repeat", " Is there anything I should repeat? Perhaps about traffic, news, weather, or your reminders? ");
+	   conversations.put("News", "There is no new Breaking News in the last 30 minutes");
+	   conversations.put("Repeat", " Is there anything I should repeat? Perhaps about traffic, news, or weather? ");
 	   conversations.put("End", " And that is all for now! Have a good day! ");
 	   
 	  

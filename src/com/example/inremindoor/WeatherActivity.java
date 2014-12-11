@@ -80,7 +80,7 @@ public class WeatherActivity {
 	    	}
 	    	else if (main.getDouble("temp") < 10){
 	    		if (humidity > 70){
-	    			incomingData.put("Suggestion", " As it is a brisk "+timeOfDay+", perhaps you would like to pick up a sweater. You should also pick up an umbrealla, given the high likelihood of rain today. ");
+	    			incomingData.put("Suggestion", " As it is a brisk "+timeOfDay+", perhaps you would like to pick up a sweater. You should also pick up an umbrella, given the high likelihood of rain today. ");
 	    		}
 	    		else{
 	    			incomingData.put("Suggestion", " As it is a brisk "+timeOfDay+", perhaps you would like to pick up a sweater");	

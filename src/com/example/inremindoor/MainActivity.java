@@ -40,9 +40,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        userResponse="";
         reminders = new TreeMap<Integer, LinkedList<String>>();
         weatherData = new WeatherActivity();
+        weatherData.updateWeatherData();
         travelTimeData = new TravelTimeActivity();
+        travelTimeData.updateTravelTimeData();
         TextView txtSpeechInput = (TextView) findViewById(R.id.txtSpeechInput);
            	
     	category = 0;
@@ -70,9 +73,10 @@ public class MainActivity extends ActionBarActivity {
     	//information.put("News", newsData.getNewsData());
     	StringBuilder sb = new StringBuilder();
 		for (Entry<Integer, LinkedList<String>> e : reminders.entrySet()){
+			sb.append("I was supposed to remind you that, ");
 			for (String s : e.getValue()){
 				sb.append(s);
-				sb.append(". ");
+				sb.append(". Additionally, ");
 			}
 		}
 		cs.conversations.put("Reminders", sb.toString());
@@ -91,46 +95,52 @@ public class MainActivity extends ActionBarActivity {
        speakText("Start",10000);
        updateData();
   	  try {
-		    Thread.sleep(5000);
+		    Thread.sleep(3000);
 		} catch (InterruptedException e) {
 		    Thread.currentThread().interrupt();
 		    return;
 		}
        speakText("Loaded", 3000);
+       speakText("News", 4000);
        speakText("Weather", 25000);
-       //speakText("News");
        speakText("Traffic", 15000);
      
        category = 1;
-       speakText("Repeat", 10000);
+       speakText("Repeat", 6000);
        promptSpeechInput();
-       while (!userResponse.toLowerCase().contains("no")){
-	   		if (userResponse.toLowerCase().contains("weather") || userResponse.toLowerCase().contains("temperature") || userResponse.toLowerCase().contains("climate") || userResponse.toLowerCase().contains("whether")){
+       }
+    
+    public void repeatReminders(String response){
+    	if (!response.toLowerCase().contains("no")){
+	   		if (response.toLowerCase().contains("weather") || response.toLowerCase().contains("temperature") || response.toLowerCase().contains("climate") || response.toLowerCase().contains("whether")){
 	   			speakText("Weather", 20000);
 	   			category = 1;
-	   			speakText("Repeat",10000);
+	   			speakText("Repeat",6000);
 	   			promptSpeechInput();
 	   		}
-	   		else if (userResponse.toLowerCase().contains("news") || userResponse.toLowerCase().contains("local") || userResponse.toLowerCase().contains("announcement") || userResponse.toLowerCase().contains("report")){
-	   	       //speakText("News");
+	   		else if (response.toLowerCase().contains("news") || response.toLowerCase().contains("local") || response.toLowerCase().contains("announcement") || response.toLowerCase().contains("report")){
+	   			speakText("News", 4000);
 	   			category = 1;
-	   			speakText("Repeat",10000);
+	   			speakText("Repeat",6000);
 	   			promptSpeechInput();
 	   		}
-	   		else if (userResponse.toLowerCase().contains("time") || userResponse.toLowerCase().contains("travel") || userResponse.toLowerCase().contains("commute") || userResponse.toLowerCase().contains("traffic")){
+	   		else if (response.toLowerCase().contains("time") || response.toLowerCase().contains("travel") || response.toLowerCase().contains("commute") || response.toLowerCase().contains("traffic")){
 	   			speakText("Traffic", 15000);
 	   			category = 1;
-	   			speakText("Repeat",10000);
+	   			speakText("Repeat",6000);
 	   			promptSpeechInput();
 	   		}
-/*	   		else if (userResponse.toLowerCase().contains("alert") || userResponse.toLowerCase().contains("reminder") || userResponse.toLowerCase().contains("notification")){
+/*	   		else if (response.toLowerCase().contains("alert") || response.toLowerCase().contains("reminder") || response.toLowerCase().contains("notification")){
 	   	       //speakText("Reminders");
 	   			category = 1;
-	   		   speakText("Repeat",10000);
+	   		   speakText("Repeat",6000);
 	   		   promptSpeechInput();
 	   		}*/
        }
-       //speakText("Reminders",20000);
+    	else{
+    		speakText("Reminders",20000);
+    		reminders = new TreeMap<Integer, LinkedList<String>>();
+    	}
     }
 
     public void speakReminder(String toSpeak, int timeDelay){
@@ -209,12 +219,18 @@ public class MainActivity extends ActionBarActivity {
                     	reminders.put(1, newList);
                     }
                     else if (inputString.toLowerCase().contains("useful") ){
-                    	LinkedList<String> newList  = reminders.get(2);
+                    	LinkedList<String> newList = new LinkedList<String>();
+                    	if (reminders.containsKey(2)){
+                    		newList  = reminders.get(2);	
+                    	}
                     	newList.add(inputString);
                     	reminders.put(2, newList);
                     }
                     else{
-                    	LinkedList<String> newList  = reminders.get(3);
+                    	LinkedList<String> newList = new LinkedList<String>();
+                    	if (reminders.containsKey(3)){
+                    		newList  = reminders.get(3);	
+                    	}
                     	newList.add(inputString);
                     	reminders.put(3, newList);
                     }
@@ -222,6 +238,7 @@ public class MainActivity extends ActionBarActivity {
                 }
                 else{
                 	userResponse = result.get(0);
+                	repeatReminders(result.get(0));
                 }
             }
             break;
